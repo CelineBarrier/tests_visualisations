@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de tests et visualisations - Parcels</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        .card-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+        }
+        .card-header h2 { margin: 0; font-size: 1.5em; }
+        .card-body {
+            padding: 20px;
+        }
+        .instructions {
+            background: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        .dot {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Page de tests et visualisations</h1>
+        <p>Simulation de dispersion Lagrangienne en Méditerranée</p>
+    </header>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>1. Vue d'ensemble des trajectoires (Statique)</h2>
+        </div>
+        <div class="card-body">
+            <div class="instructions">
+                <p>Cette carte présente un résumé global du déplacement des particules sur la période simulée.</p>
+                <div class="legend-item">
+                    <span class="dot" style="background-color: green;"></span> Points Verts : Position de DÉPART (T=0)
+                </div>
+                <div class="legend-item">
+                    <span class="dot" style="background-color: red;"></span> Points Rouges : Position FINALE (Arrivée)
+                </div>
+                <div class="legend-item">
+                    <span style="color: blue; font-weight: bold;">—</span> Trait Bleu : Trajet parcouru
+                </div>
+            </div>
+            <iframe src="Carte_Interactive.html" title="Carte Statique"></iframe>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>2. Animation Temporelle (Dynamique)</h2>
+        </div>
+        <div class="card-body">
+            <div class="instructions">
+                <p><strong>Visualisation interactive de l'évolution temporelle sur 100 jours.</strong></p>
+                <ul>
+                    <li><strong>Lancer l'animation :</strong> Cliquez sur le bouton <code>Play ▶</code> en bas à gauche de la carte.</li>
+                    <li><strong>Contrôler le temps :</strong> Faites glisser le curseur bleu manuellement pour voir une date précise.</li>
+                    <li><strong>Vitesse (FPS) :</strong> Vous pouvez ajuster la fluidité via les paramètres du lecteur si disponibles, ou en faisant glisser le curseur rapidement.</li>
+                </ul>
+            </div>
+            <iframe src="Carte_Med_Interactive_Full.html" title="Carte Dynamique"></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <p>Créé le 22/11/2025 par <strong>Céline Barrier</strong></p>
+        <p>Généré via Parcels & Folium</p>
+    </footer>
+</div>
+
+</body>
+</html>
