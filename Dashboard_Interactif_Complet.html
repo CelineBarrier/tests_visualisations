@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard AMP - Golfe du Lion</title>
+    <style>
+        /* Mise en page globale "Screen-fit" */
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; background-color: #ecf0f1; overflow: hidden; }
+        
+        /* HEADER COMPACT */
+        header { 
+            background: #2c3e50; color: white; padding: 0 15px; height: 50px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;
+        }
+        h1 { margin: 0; font-size: 1.1rem; }
+        .subtitle { font-size: 0.8rem; opacity: 0.8; margin-left: 10px; }
+        
+        .main-content { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 50px); }
+        
+        /* CARTE : Prend tout l'espace restant à gauche */
+        .map-panel { width: 60%; height: 100%; position: relative; border-right: 1px solid #bdc3c7; }
+        .map-frame { width: 100%; height: 100%; border: none; }
+        
+        /* PANNEAU DROIT : Flexbox vertical pour distribuer l'espace */
+        .side-panel { 
+            width: 40%; height: 100%; padding: 15px; 
+            background: #f4f6f7; 
+            display: flex; flex-direction: column; gap: 10px;
+            box-sizing: border-box; overflow-y: auto;
+        }
+        
+        /* GRAPHIQUE : Hauteur fixe mais raisonnable */
+        .graph-container { 
+            flex-shrink: 0; height: 350px; width: 100%; 
+            background: white; border-radius: 8px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+            overflow: hidden;
+        }
+        .graph-frame { width: 100%; height: 100%; border: none; }
+        
+        /* GRILLE D'INFOS : Stats et Légende côte à côte pour gagner de la hauteur */
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-shrink: 0;
+        }
+        
+        .card { 
+            background: #fff; padding: 12px; border-radius: 6px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e5e7e9; 
+        }
+        .card h3 { 
+            margin: 0 0 8px 0; color: #2c3e50; 
+            border-bottom: 2px solid #3498db; padding-bottom: 4px; 
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.85rem; }
+        .stat-val { font-weight: bold; color: #2c3e50; }
+        
+        .legend-item { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.8em; }
+        .legend-dot { height: 10px; width: 10px; display: inline-block; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
+        
+        .instructions { font-size: 0.8rem; color: #7f8c8d; font-style: italic; margin-top: auto; text-align: center; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Analyse AMP Golfe du Lion</h1>
+        <span class="subtitle">Simulation 100 Jours</span>
+    </div>
+    <div style="font-size: 0.75rem;">Parcels Output</div>
+</header>
+
+<div class="main-content">
+    <div class="map-panel">
+        <iframe src="composant_carte.html" class="map-frame"></iframe>
+    </div>
+    
+    <div class="side-panel">
+        
+        <div class="graph-container">
+            <iframe src="composant_graphique.html" class="graph-frame"></iframe>
+        </div>
+        
+        <div class="info-grid">
+            <div class="card">
+                <h3>Résultats</h3>
+                <div class="stat-row"><span>Lâchées:</span> <span class="stat-val">10,000</span></div>
+                <div class="stat-row"><span>Capturées:</span> <span class="stat-val">147</span></div>
+                <div class="stat-row"><span>Taux:</span> <span class="stat-val">1.5%</span></div>
+            </div>
+            
+            <div class="card">
+                <h3>Légende</h3>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: #e74c3c;"></span> 
+                    <span>Capturées (AMP)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: #3498db;"></span> 
+                    <span>Libres (Mer)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background-color: green; opacity: 0.5;"></span> 
+                    <span>Zone AMP</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            Curseur temporel sur la carte pour l'animation.<br>
+            Survol du graphe pour les détails précis.
+        </div>
+    
+    </div>
+</div>
+
+</body>
+</html>
