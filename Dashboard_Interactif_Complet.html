@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Interactif - AMP Golfe du Lion</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; background-color: #f4f4f4; }
+        
+        header { 
+            background: #2c3e50; color: white; padding: 0 20px; height: 60px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;
+        }
+        h1 { margin: 0; font-size: 1.2rem; }
+        .subtitle { font-size: 0.9rem; opacity: 0.8; }
+        
+        .main-content { display: flex; flex: 1; overflow: hidden; }
+        
+        .map-panel { width: 55%; position: relative; border-right: 1px solid #ccc; }
+        .map-frame { width: 100%; height: 100%; border: none; }
+        
+        .side-panel { width: 45%; padding: 20px; background: white; display: flex; flex-direction: column; overflow-y: auto; }
+        
+        .graph-frame { width: 100%; height: 520px; border: none; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        
+        .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
+        .card h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; font-size: 1rem; }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        .stat-val { font-weight: bold; color: #2c3e50; }
+        
+        .legend-dot { height: 10px; width: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; }
+        
+        .info-note {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border-left: 4px solid #ffeeba;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Analyse d'Impact - Aire Marine Protégée (AMP)</h1>
+        <span class="subtitle">Simulation de dispersion (100 Jours)</span>
+    </div>
+    <div style="font-size: 0.8rem;">Généré par Parcels</div>
+</header>
+
+<div class="main-content">
+    <div class="map-panel">
+        <iframe src="composant_carte.html" class="map-frame"></iframe>
+    </div>
+    
+    <div class="side-panel">
+        
+        <iframe src="composant_graphique.html" class="graph-frame"></iframe>
+        
+        <div class="card">
+            <h3>Statistiques de la Simulation</h3>
+            <div class="stat-row"><span>Total Particules Lâchées :</span> <span class="stat-val">10,000</span></div>
+            <div class="stat-row"><span>Particules Affichées (Carte) :</span> <span class="stat-val">2500 (échantillon)</span></div>
+            <div class="stat-row"><span>Particules Capturées :</span> <span class="stat-val">119</span></div>
+            <div class="stat-row"><span>Taux de Capture :</span> <span class="stat-val">1.2%</span></div>
+        </div>
+        
+        <div class="card">
+            <h3>Légende et Interprétation</h3>
+            <div class="stat-row">
+                <div><span class="legend-dot" style="background-color: #e74c3c;"></span> Particules Capturées</div>
+                <div style="font-size: 0.8em; color: #666;">Finissent dans l'AMP</div>
+            </div>
+            <div class="stat-row">
+                <div><span class="legend-dot" style="background-color: #3498db;"></span> Particules Libres</div>
+                <div style="font-size: 0.8em; color: #666;">Restent en mer</div>
+            </div>
+            
+            <div class="info-note">
+                <strong>Vulgarisation scientifique :</strong><br>
+                Le terme <em>"Capture"</em> est utilisé ici pour modéliser des processus écologiques ou physiques complexes. 
+                Il signifie que la particule (larve ou objet) cesse d'être transportée par le courant, par exemple suite à un 
+                échouage sur la côte ou à l'installation d'une larve mature dans son habitat (recrutement).
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Instructions</h3>
+            <p style="font-size: 0.9rem; color: #555;">
+                Utilisez le curseur temporel (bouton Play ▶) en bas à gauche de la carte pour visualiser le transport à travers la Méditerranée.
+            </p>
+        </div>
+    
+    </div>
+</div>
+
+</body>
+</html>
