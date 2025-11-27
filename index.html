@@ -1,21 +1,179 @@
-# -*- coding: utf-8 -*-
-import os
 
-# =============================================================================
-# 1. CONFIGURATION
-# =============================================================================
-WORK_DIR = r"C:\Users\barrier_c\Desktop\parcels"
-OUTPUT_HTML = "index.html"
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisations Parcels - Data Viz Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- VARIABLES DE COULEUR (PALETTE ABYSSES) --- */
+        :root {
+            --bg-deep: #050a14;        /* Noir bleuté profond */
+            --bg-card: rgba(20, 30, 50, 0.7); /* Bleu verre semi-transparent */
+            --accent: #00f2ff;         /* Cyan électrique (Bioluminescence) */
+            --accent-dim: #008c9e;     /* Cyan sombre pour les bordures */
+            --text-main: #e0f7fa;      /* Blanc glacé */
+            --text-muted: #90a4ae;     /* Gris bleuté */
+            --header-gradient: linear-gradient(180deg, #0b1120 0%, #050a14 100%);
+        }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; /* Corps de texte très lisible */
+            background-color: var(--bg-deep);
+            background-image: radial-gradient(circle at 50% 0%, #112240 0%, #050a14 60%); /* Leger halo en haut */
+            color: var(--text-main);
+            margin: 0; 
+            padding: 40px 20px; 
+            min-height: 100vh;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        
+        /* --- EN-TÊTE --- */
+        header { 
+            text-align: center; 
+            margin-bottom: 60px; 
+            padding: 40px 20px; 
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1); /* Ligne cyan très fine */
+        }
+        
+        header h1 { 
+            font-family: 'Montserrat', sans-serif;
+            margin: 0; 
+            font-size: 2em; 
+            line-height: 1.3;
+            text-transform: uppercase; 
+            font-weight: 600;
+            letter-spacing: 3px;
+            background: -webkit-linear-gradient(0deg, #ffffff, #00f2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; /* Effet dégradé sur le texte */
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.2); /* Légère lueur */
+        }
+        
+        /* --- CONTEXTE (Style HUD) --- */
+        .context-section { 
+            background: rgba(11, 20, 35, 0.6);
+            border-left: 3px solid var(--accent);
+            padding: 25px 35px; 
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 60px; 
+            line-height: 1.8; 
+            text-align: justify; 
+            color: var(--text-muted);
+            backdrop-filter: blur(5px); /* Effet de flou arrière-plan */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .context-section h3 { 
+            margin-top: 0; 
+            font-family: 'Montserrat', sans-serif;
+            color: var(--accent); 
+            font-size: 1.1em; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .context-section strong { color: var(--text-main); font-weight: 500; }
+        .context-section a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); transition: all 0.3s; }
+        .context-section a:hover { color: #fff; border-bottom: 1px solid #fff; }
+        
+        /* --- CARTES (GLASSMORPHISM) --- */
+        .card { 
+            background: var(--bg-card);
+            backdrop-filter: blur(12px); /* L'effet verre dépoli moderne */
+            border-radius: 16px; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            margin-bottom: 70px; 
+            overflow: hidden; 
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px); /* Légère élévation au survol */
+            border-color: rgba(0, 242, 255, 0.2);
+        }
+        
+        .card-header { 
+            padding: 20px 30px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-header h2 { 
+            margin: 0; 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3em; 
+            font-weight: 400;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Petit carré décoratif avant le titre */
+        .card-header h2::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            margin-right: 15px;
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--accent);
+        }
+        
+        .card-body { padding: 30px; }
+        
+        /* IFRAMES */
+        iframe { 
+            width: 100%; 
+            height: 600px; 
+            border: none; 
+            border-radius: 8px; 
+            background: #fff; /* Fond blanc conservé pour la lisibilité des cartes folium/plotly */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        /* INSTRUCTIONS */
+        .instructions { 
+            background: rgba(0, 242, 255, 0.05); 
+            border: 1px solid rgba(0, 242, 255, 0.1);
+            padding: 15px 20px; 
+            margin-bottom: 25px; 
+            border-radius: 6px; 
+            font-size: 0.9em; 
+            color: #b0bec5;
+        }
+        .instructions strong { color: var(--accent); }
+        
+        /* PIED DE PAGE */
+        footer { 
+            text-align: center; 
+            margin-top: 100px; 
+            color: var(--text-muted); 
+            border-top: 1px solid rgba(255,255,255,0.05); 
+            padding-top: 40px; 
+            font-size: 0.85em;
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body>
 
-# Noms correspondants exactement aux fichiers générés par le script 1
-MAP_STATIC = "Carte_Interactive.html"           
-MAP_DYNAMIC = "Carte_Med_Interactive_Full.html" 
-FILE_DASHBOARD = "Dashboard_Interactif_Complet.html" 
-
-# =============================================================================
-# 2. CONTEXTE DU PROJET (DATA VIZ CHALLENGE)
-# =============================================================================
-PROJECT_CONTEXT = """
+<div class="container">
+    <header>
+        <h1>Simulations et visualisations de trajectoires d'objets vivants ou non-vivants en Méditerranée</h1>
+    </header>
+    
+    <div class="context-section">
+        <h3>Contexte du projet</h3>
+        <p>
 Cette page et ses visualisations ont été réalisées à des fins pédagogiques et de démonstration,
 dans le cadre du <strong>Data Viz’ Challenge 2025-2026</strong> de l’Université de Corse.
 Les résultats présentés sont fictifs, mais les champs de courants marins utilisés proviennent de données
@@ -29,189 +187,9 @@ lâchées et suivies pendant 100 jours pour analyser leur connectivité avec une
 Ce projet s’inscrit dans l’axe <strong>« Bien-être du territoire »</strong> du challenge
 (environnement, populations, bien-vieillir), en lien avec la dynamique des populations marines exploitées
 et/ou des substances ou objets polluants dérivants en mer.
-"""
-
-# =============================================================================
-# 3. GÉNÉRATION DU CONTENU HTML (THEME MODERN DEEP SEA)
-# =============================================================================
-html_content = f"""
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualisations Parcels - Data Viz Challenge</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- VARIABLES DE COULEUR (PALETTE ABYSSES) --- */
-        :root {{
-            --bg-deep: #050a14;        /* Noir bleuté profond */
-            --bg-card: rgba(20, 30, 50, 0.7); /* Bleu verre semi-transparent */
-            --accent: #00f2ff;         /* Cyan électrique (Bioluminescence) */
-            --accent-dim: #008c9e;     /* Cyan sombre pour les bordures */
-            --text-main: #e0f7fa;      /* Blanc glacé */
-            --text-muted: #90a4ae;     /* Gris bleuté */
-            --header-gradient: linear-gradient(180deg, #0b1120 0%, #050a14 100%);
-        }}
-
-        body {{ 
-            font-family: 'Roboto', sans-serif; /* Corps de texte très lisible */
-            background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% 0%, #112240 0%, #050a14 60%); /* Leger halo en haut */
-            color: var(--text-main);
-            margin: 0; 
-            padding: 40px 20px; 
-            min-height: 100vh;
-        }}
-        
-        .container {{ 
-            max-width: 1200px; 
-            margin: 0 auto; 
-        }}
-        
-        /* --- EN-TÊTE --- */
-        header {{ 
-            text-align: center; 
-            margin-bottom: 60px; 
-            padding: 40px 20px; 
-            border-bottom: 1px solid rgba(0, 242, 255, 0.1); /* Ligne cyan très fine */
-        }}
-        
-        header h1 {{ 
-            font-family: 'Montserrat', sans-serif;
-            margin: 0; 
-            font-size: 2em; 
-            line-height: 1.3;
-            text-transform: uppercase; 
-            font-weight: 600;
-            letter-spacing: 3px;
-            background: -webkit-linear-gradient(0deg, #ffffff, #00f2ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent; /* Effet dégradé sur le texte */
-            text-shadow: 0 0 30px rgba(0, 242, 255, 0.2); /* Légère lueur */
-        }}
-
-        /* --- CONTEXTE (Style HUD) --- */
-        .context-section {{ 
-            background: rgba(11, 20, 35, 0.6);
-            border-left: 3px solid var(--accent);
-            padding: 25px 35px; 
-            border-radius: 0 10px 10px 0;
-            margin-bottom: 60px; 
-            line-height: 1.8; 
-            text-align: justify; 
-            color: var(--text-muted);
-            backdrop-filter: blur(5px); /* Effet de flou arrière-plan */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }}
-        
-        .context-section h3 {{ 
-            margin-top: 0; 
-            font-family: 'Montserrat', sans-serif;
-            color: var(--accent); 
-            font-size: 1.1em; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }}
-        
-        .context-section strong {{ color: var(--text-main); font-weight: 500; }}
-        .context-section a {{ color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); transition: all 0.3s; }}
-        .context-section a:hover {{ color: #fff; border-bottom: 1px solid #fff; }}
-
-        /* --- CARTES (GLASSMORPHISM) --- */
-        .card {{ 
-            background: var(--bg-card);
-            backdrop-filter: blur(12px); /* L'effet verre dépoli moderne */
-            border-radius: 16px; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            margin-bottom: 70px; 
-            overflow: hidden; 
-            transition: transform 0.3s ease;
-        }}
-        
-        .card:hover {{
-            transform: translateY(-5px); /* Légère élévation au survol */
-            border-color: rgba(0, 242, 255, 0.2);
-        }}
-        
-        .card-header {{ 
-            padding: 20px 30px; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(0, 0, 0, 0.2);
-        }}
-        
-        .card-header h2 {{ 
-            margin: 0; 
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.3em; 
-            font-weight: 400;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-        }}
-        
-        /* Petit carré décoratif avant le titre */
-        .card-header h2::before {{
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent);
-            margin-right: 15px;
-            border-radius: 2px;
-            box-shadow: 0 0 10px var(--accent);
-        }}
-        
-        .card-body {{ padding: 30px; }}
-        
-        /* IFRAMES */
-        iframe {{ 
-            width: 100%; 
-            height: 600px; 
-            border: none; 
-            border-radius: 8px; 
-            background: #fff; /* Fond blanc conservé pour la lisibilité des cartes folium/plotly */
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-        }}
-        
-        /* INSTRUCTIONS */
-        .instructions {{ 
-            background: rgba(0, 242, 255, 0.05); 
-            border: 1px solid rgba(0, 242, 255, 0.1);
-            padding: 15px 20px; 
-            margin-bottom: 25px; 
-            border-radius: 6px; 
-            font-size: 0.9em; 
-            color: #b0bec5;
-        }}
-        .instructions strong {{ color: var(--accent); }}
-
-        /* PIED DE PAGE */
-        footer {{ 
-            text-align: center; 
-            margin-top: 100px; 
-            color: var(--text-muted); 
-            border-top: 1px solid rgba(255,255,255,0.05); 
-            padding-top: 40px; 
-            font-size: 0.85em;
-            font-family: 'Montserrat', sans-serif;
-        }}
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <header>
-        <h1>Simulations et visualisations de trajectoires d'objets vivants ou non-vivants en Méditerranée</h1>
-    </header>
-
-    <div class="context-section">
-        <h3>Contexte du projet</h3>
-        <p>{PROJECT_CONTEXT}</p>
+</p>
     </div>
-
+    
     <div class="card">
         <div class="card-header">
             <h2>1. Vue d'ensemble des trajectoires (statique)</h2>
@@ -225,10 +203,10 @@ html_content = f"""
                     Note : Sous-échantillonnage (1 particule / 50) pour lisibilité.
                 </span>
             </div>
-            <iframe src="{MAP_STATIC}" title="Carte statique"></iframe>
+            <iframe src="Carte_Interactive.html" title="Carte statique"></iframe>
         </div>
     </div>
-
+    
     <div class="card">
         <div class="card-header">
             <h2>2. Animation temporelle (dynamique)</h2>
@@ -237,29 +215,22 @@ html_content = f"""
             <div class="instructions">
                 <strong>Visualisation fluide :</strong> Cliquez sur le bouton <code>Play ▶</code> (en bas à gauche) pour lancer la simulation temporelle sur l'ensemble du bassin.
             </div>
-            <iframe src="{MAP_DYNAMIC}" title="Carte dynamique"></iframe>
+            <iframe src="Carte_Med_Interactive_Full.html" title="Carte dynamique"></iframe>
         </div>
     </div>
-
+    
     <div class="card">
         <div class="card-header">
             <h2>3. Dynamique des particules</h2>
         </div>
         <div class="card-body">
             <div class="instructions">
-                <strong>Tableau de bord :</strong> Interface complète liant la carte à la courbe de capture dans 
-l’<strong>Aire Marine Protégée (AMP)</strong>.
-<br>
-<span style="font-style: italic; font-size: 0.9em;">
-Note : le terme « capture » désigne soit la modélisation d’une espèce marine atteignant un stade
-suffisamment avancé pour s’installer dans un habitat favorable, soit la stagnation d’un objet non vivant
-dans une zone définie.
-</span>
+                <strong>Tableau de bord :</strong> Analyse de la connectivité avec l'<strong>Aire Marine Protégée (AMP)</strong>.
             </div>
-            <iframe src="{FILE_DASHBOARD}" title="Dashboard complet" style="height: 750px;"></iframe>
+            <iframe src="Dashboard_Interactif_Complet.html" title="Dashboard complet" style="height: 750px;"></iframe>
         </div>
     </div>
-
+    
     <footer>
         <p>Réalisé par Céline Barrier pour le Data Viz’ Challenge 2025-2026 | Université de Corse</p>
         <p>Données : Copernicus Marine Service | Outil : Parcels & Folium</p>
@@ -268,22 +239,3 @@ dans une zone définie.
 
 </body>
 </html>
-"""
-
-# =============================================================================
-# 4. ÉCRITURE DU FICHIER
-# =============================================================================
-output_path = os.path.join(WORK_DIR, OUTPUT_HTML)
-
-try:
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
-    
-    print("-" * 40)
-    print(" SUCCÈS ! PAGE INDEX (DESIGN 'MODERN DEEP SEA') GÉNÉRÉE.")
-    print("-" * 40)
-    print(f"Fichier créé : {output_path}")
-    print("Double-cliquez sur 'index.html' pour voir le résultat.")
-
-except Exception as e:
-    print(f"Erreur lors de l'écriture du fichier : {e}")
